@@ -145,7 +145,10 @@ population <- left_join(population, regions, by="state_name") # match rows of re
 
 ```{r}
 api <- "https://data.cdc.gov/resource/pwn4-m3yp.json" 
-cases_raw <- api|> request() |> req_perform() |> resp_body_json(simplifyVector = TRUE)
+casereq <- api|> request() |> req_perform()
+resp_check_status(casereq)
+resp_check_content_type(casereq)
+cases_raw <- casereq |> resp_body_json(simplifyVector = TRUE)
 ```
 
 We see exactly 1,000 rows. We should be seeing over $52 \times 3$ rows per state. - This may be due to a limitation from the API on the number of rows that can be pulled at a time. 
@@ -154,7 +157,10 @@ We see exactly 1,000 rows. We should be seeing over $52 \times 3$ rows per state
 
 ```{r}
 api <- "https://data.cdc.gov/resource/pwn4-m3yp.json"
-cases_raw2 <- api|> request() |> req_url_query(`$limit` = 10000000000) |>req_perform() |> resp_body_json(simplifyVector = TRUE) # redo with limit
+casereq2 <- api|> request() |> req_url_query(`$limit` = 10000000000) |> req_perform()
+resp_check_status(casereq2)
+resp_check_content_type(casereq2)
+cases_raw2 <- casereq2 |> resp_body_json(simplifyVector = TRUE) # redo with limit
 Cases = cases_raw2 |> select(state,date=end_date,cases=new_cases) |> # choose relevant columns from dataset
   mutate(cases=as.numeric(cases),date=as.Date(date)) # fix type
 ```
@@ -192,8 +198,10 @@ Use **httr2** to download COVID-19 death data from this endpoint. Make sure to r
 
 
 ```{r}
-Deaths <- deaths_url |> request() |> req_url_query(`$limit` = 10000000000) |> # increase limit to get full data
-  req_perform() |> resp_body_json(simplifyVector = TRUE) |> 
+deathsreq = deaths_url |> request() |> req_url_query(`$limit` = 10000000000) |> req_perform() # increase limit to get full data
+resp_check_status(deathsreq)
+resp_check_content_type(deathsreq)
+Deaths <- deathsreq |> resp_body_json(simplifyVector = TRUE) |> 
   filter(sex=="All Sexes", age_group=="All Ages") |> # only use aggregate rows, not stratified rows
   select(state, date=end_date, deaths=covid_19_deaths) |> # choose relevant columns to keep
   mutate(date = as.Date(date), deaths=as.numeric(deaths)) |> # fix formatting
