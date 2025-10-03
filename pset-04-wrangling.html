@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>request <span class="ot">&lt;-</span> <span class="fu">request</span>(url) <span class="sc">|&gt;</span> <span class="fu">req_url_query</span>(<span class="at">get=</span><span class="fu">I</span>(<span class="st">"POP_2020,POP_2021,NAME"</span>), </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">`</span><span class="at">for</span><span class="st">`</span><span class="ot">=</span><span class="st">"state:*"</span>,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">key =</span> census_key)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>request<span class="sc">$</span>url </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>request<span class="sc">$</span>url <span class="co"># check match</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "https://api.census.gov/data/2021/pep/population?get=POP_2020,POP_2021,NAME&amp;for=state%3A%2A&amp;key=f7d9c0f7458620c5490f848d55090f13817d07b5"</code></pre>
 </div>
@@ -136,8 +136,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Make a request to the US Census API using the <code>request</code> object. Save the response to and object named <code>response</code>. Check the response status of your request and make sure it was successful. You can learn about <em>status codes</em> <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">here</a>.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> request <span class="sc">|&gt;</span> <span class="fu">req_perform</span>()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>response</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> request <span class="sc">|&gt;</span> <span class="fu">req_perform</span>() <span class="co"># perform request</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>response <span class="co"># check output</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;httr2_response&gt;</code></pre>
 </div>
@@ -154,7 +154,7 @@ https://api.census.gov/data/2021/pep/population?get=POP_2020,POP_2021,NAME&amp;f
 <div class="cell-output cell-output-stderr">
 <pre><code>Body: In memory (2112 bytes)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_status</span>(response)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_status</span>(response) <span class="co"># check status - 200 is good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 200</code></pre>
 </div>
@@ -172,7 +172,7 @@ https://api.census.gov/data/2021/pep/population?get=POP_2020,POP_2021,NAME&amp;f
 <li>Use just one line of code and one function to extract the data into a matrix. Hints: 1) Use the <code>resp_body_json</code> function. 2) The first row of the matrix will be the variable names and this OK as we will fix in the next exercise.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> <span class="fu">resp_body_json</span>(response, <span class="at">simplifyVector =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> <span class="fu">resp_body_json</span>(response, <span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="6" type="1">
 <li>Examine the <code>population</code> matrix you just created. Notice that 1) it is not tidy, 2) the column types are not what we want, and 3) the first row is a header. Convert <code>population</code> to a tidy dataset. Remove the state ID column and change the name of the column with state names to <code>state_name</code>. Add a column with state abbreviations called <code>state</code>. Make sure you assign the abbreviations for DC and PR correctly. Hint: Use the <strong>janitor</strong> package to make the first row the header.</li>
@@ -188,82 +188,87 @@ https://api.census.gov/data/2021/pep/population?get=POP_2020,POP_2021,NAME&amp;f
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="st">"state_name"</span>, <span class="at">names_to=</span><span class="st">"year"</span>, <span class="at">values_to=</span><span class="st">"pop"</span>) <span class="sc">|&gt;</span><span class="co"># use pivot_longer to tidy</span></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year=</span><span class="fu">gsub</span>(<span class="st">"^POP_"</span>, <span class="st">""</span>, year)) <span class="sc">|&gt;</span> <span class="co"># remove POP_ from year</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pop=</span><span class="fu">as.numeric</span>(pop), <span class="at">year=</span><span class="fu">as.numeric</span>(year)) <span class="sc">|&gt;</span> <span class="co"># parese all relevant columns to numeric</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_abb =</span> <span class="fu">case_when</span>(</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_abb =</span> <span class="fu">case_when</span>(   <span class="co"># use case_when to add abbreviations for DC and PR</span></span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    state_name <span class="sc">==</span> <span class="st">"Puerto Rico"</span> <span class="sc">~</span> <span class="st">"PR"</span>,</span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    state_name <span class="sc">==</span> <span class="st">"District of Columbia"</span> <span class="sc">~</span> <span class="st">"DC"</span>,</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> state.abb[<span class="fu">match</span>(state_name,state.name)])) <span class="co"># add state abbreviations using state.abb variable</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use case_when to add abbreviations for DC and PR</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> state.abb[<span class="fu">match</span>(state_name,state.name)])) <span class="co"># add state abbreviations using state.abb variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="7" type="1">
 <li>As a check, make a barplot of states’ 2021 and 2022 populations. Show the state names in the y-axis ordered by population size. Hint: You will need to use <code>reorder</code> and use <code>facet_wrap</code>.</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>population <span class="sc">|&gt;</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># reorder state</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span><span class="fu">reorder</span>(state_name, pop), <span class="at">x=</span>pop)) <span class="sc">+</span> <span class="co"># assign aesthetic mapping</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="st">"year"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Population"</span>,<span class="at">y=</span><span class="st">"State"</span>, <span class="at">title=</span><span class="st">"State Population 2020 vs. 2021"</span>)<span class="co"># use geom_col to plot barplot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span><span class="fu">reorder</span>(state_name, pop), <span class="at">x=</span>pop)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="st">"year"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Population"</span>,<span class="at">y=</span><span class="st">"State"</span>, <span class="at">title=</span><span class="st">"State Population 2020 vs. 2021"</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>)) <span class="co"># make state names smaller to fit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="pset-04-wrangling_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># flip coordinates</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># facet by year</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="8" type="1">
 <li>The following URL:</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/datasciencelabs/2025/raw/refs/heads/main/data/regions.json"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/datasciencelabs/2025/raw/refs/heads/main/data/regions.json"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>points to a JSON file that lists the states in the 10 Public Health Service (PHS) defined by CDC. We want to add these regions to the <code>population</code> dataset. To facilitate this create a data frame called <code>regions</code> that has two columns <code>state_name</code>, <code>region</code>, <code>region_name</code>. One of the regions has a long name. Change it to something shorter.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/datasciencelabs/2025/raw/refs/heads/main/data/regions.json"</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span>  <span class="fu">fromJSON</span>(url2, <span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="co">#use jsonlit JSON parser </span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>regions<span class="sc">$</span>region_name[regions<span class="sc">$</span>region_name <span class="sc">==</span> <span class="st">"New York and New Jersey, Puerto Rico, Virgin Islands"</span>] <span class="ot">=</span> <span class="st">"NYNJ/Islands"</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span>  <span class="fu">map_df</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(regions)), <span class="sc">~</span> {</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> regions<span class="sc">$</span>region[.x],</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">region_name =</span> regions<span class="sc">$</span>region_name[.x],</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">state_name=</span> regions<span class="sc">$</span>states[[.x]]</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>}) <span class="co">#convert list to data frame. You can use map_df in purrr package </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/datasciencelabs/2025/raw/refs/heads/main/data/regions.json"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span>  <span class="fu">fromJSON</span>(url2, <span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="co">#use jsonlit JSON parser </span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>regions<span class="sc">$</span>region_name[regions<span class="sc">$</span>region_name <span class="sc">==</span> <span class="st">"New York and New Jersey, Puerto Rico, Virgin Islands"</span>] <span class="ot">=</span> <span class="st">"NYNJ/Islands"</span> <span class="co"># shorten region name</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span>  <span class="fu">map_df</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(regions)), <span class="sc">~</span> { <span class="co">#for 1-n, where n is number of rows in df</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>( <span class="co"># create tibble with</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> regions<span class="sc">$</span>region[.x], <span class="co"># region column as the region of row n</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">region_name =</span> regions<span class="sc">$</span>region_name[.x], <span class="co"># region name column as the region name of row n</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">state_name=</span> regions<span class="sc">$</span>states[[.x]] <span class="co"># state name column as each value within the states list</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="co">#convert list to data frame. You can use map_df in purrr package </span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state_name <span class="sc">%in%</span> <span class="fu">c</span>(state.name, <span class="st">"District of Columbia"</span>, <span class="st">"Puerto Rico"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="9" type="1">
 <li>Add a region and region name columns to the <code>population</code> data frame.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> <span class="fu">left_join</span>(population, regions, <span class="at">by=</span><span class="st">"state_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> <span class="fu">left_join</span>(population, regions, <span class="at">by=</span><span class="st">"state_name"</span>) <span class="co"># match rows of regions to rows of population by state name column</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="10" type="1">
 <li>From reading <a href="https://data.cdc.gov/" class="uri">https://data.cdc.gov/</a> we learn the endpoint <code>https://data.cdc.gov/resource/pwn4-m3yp.json</code> provides state level data from SARS-COV2 cases. Use the <strong>httr2</strong> tools you have learned to download this into a data frame. Is all the data there? If not, comment on why.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>api <span class="ot">&lt;-</span> <span class="st">"https://data.cdc.gov/resource/pwn4-m3yp.json"</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>cases_raw <span class="ot">&lt;-</span> api<span class="sc">|&gt;</span> <span class="fu">request</span>() <span class="sc">|&gt;</span> <span class="fu">req_perform</span>() <span class="sc">|&gt;</span> <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>api <span class="ot">&lt;-</span> <span class="st">"https://data.cdc.gov/resource/pwn4-m3yp.json"</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>casereq <span class="ot">&lt;-</span> api<span class="sc">|&gt;</span> <span class="fu">request</span>() <span class="sc">|&gt;</span> <span class="fu">req_perform</span>()</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_check_status</span>(casereq)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_check_content_type</span>(casereq)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>cases_raw <span class="ot">&lt;-</span> casereq <span class="sc">|&gt;</span> <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We see exactly 1,000 rows. We should be seeing over <span class="math inline">\(52 \times 3\)</span> rows per state. - This may be due to a limitation from the API on the number of rows that can be pulled at a time.</p>
 <ol start="11" type="1">
 <li>The reason you see exactly 1,000 rows is because CDC has a default limit. You can change this limit by adding <code>$limit=10000000000</code> to the request. Rewrite the previous request to ensure that you receive all the data. Then wrangle the resulting data frame to produce a data frame with columns <code>state</code>, <code>date</code> (should be the end date) and <code>cases</code>. Make sure the cases are numeric and the dates are in <code>Date</code> ISO-8601 format.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>api <span class="ot">&lt;-</span> <span class="st">"https://data.cdc.gov/resource/pwn4-m3yp.json"</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>cases_raw2 <span class="ot">&lt;-</span> api<span class="sc">|&gt;</span> <span class="fu">request</span>() <span class="sc">|&gt;</span> <span class="fu">req_url_query</span>(<span class="st">`</span><span class="at">$limit</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">10000000000</span>) <span class="sc">|&gt;</span><span class="fu">req_perform</span>() <span class="sc">|&gt;</span> <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Cases <span class="ot">=</span> cases_raw2 <span class="sc">|&gt;</span> <span class="fu">select</span>(state,<span class="at">date=</span>end_date,<span class="at">cases=</span>new_cases) <span class="sc">|&gt;</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cases=</span><span class="fu">as.numeric</span>(cases),<span class="at">date=</span><span class="fu">as.Date</span>(date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>api <span class="ot">&lt;-</span> <span class="st">"https://data.cdc.gov/resource/pwn4-m3yp.json"</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>casereq2 <span class="ot">&lt;-</span> api<span class="sc">|&gt;</span> <span class="fu">request</span>() <span class="sc">|&gt;</span> <span class="fu">req_url_query</span>(<span class="st">`</span><span class="at">$limit</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">10000000000</span>) <span class="sc">|&gt;</span> <span class="fu">req_perform</span>()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_check_status</span>(casereq2)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_check_content_type</span>(casereq2)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>cases_raw2 <span class="ot">&lt;-</span> casereq2 <span class="sc">|&gt;</span> <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="co"># redo with limit</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>Cases <span class="ot">=</span> cases_raw2 <span class="sc">|&gt;</span> <span class="fu">select</span>(state,<span class="at">date=</span>end_date,<span class="at">cases=</span>new_cases) <span class="sc">|&gt;</span> <span class="co"># choose relevant columns from dataset</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cases=</span><span class="fu">as.numeric</span>(cases),<span class="at">date=</span><span class="fu">as.Date</span>(date)) <span class="sc">|&gt;</span> <span class="co"># fix type</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">%in%</span> <span class="fu">c</span>(state.abb, <span class="st">"DC"</span>, <span class="st">"PR"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="12" type="1">
 <li>For 2020 and 2021, make a time series plot of cases per 100,000 versus time for each state. Stratify the plot by region name. Make sure to label you graph appropriately.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cases_pop_20_21 <span class="ot">=</span> Cases <span class="sc">|&gt;</span> <span class="fu">filter</span>(date<span class="sc">&gt;</span><span class="st">"2019-12-31"</span> <span class="sc">&amp;</span> date <span class="sc">&lt;</span> <span class="st">"2022-1-1"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date_to_year =</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(date,<span class="st">"%Y"</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">y =</span> population, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"state"</span><span class="ot">=</span><span class="st">"state_abb"</span>, <span class="st">"date_to_year"</span> <span class="ot">=</span> <span class="st">"year"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>cases_pop_20_21 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span><span class="dv">100000</span><span class="sc">*</span>cases<span class="sc">/</span>pop, <span class="at">col=</span>state)) <span class="sc">+</span> </span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>region_name, <span class="at">scales=</span><span class="st">"free_x"</span>) <span class="sc">+</span> </span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Date"</span>, <span class="at">y=</span><span class="st">"Cases per 100,000"</span>, <span class="at">title=</span><span class="st">"2020-2021 Cases Across the United States"</span>) <span class="sc">+</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cases_pop_20_21 <span class="ot">=</span> Cases <span class="sc">|&gt;</span> <span class="fu">filter</span>(date<span class="sc">&gt;</span><span class="st">"2019-12-31"</span> <span class="sc">&amp;</span> date <span class="sc">&lt;</span> <span class="st">"2022-1-1"</span>) <span class="sc">|&gt;</span> <span class="co"># only 2020 and 2021 data</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date_to_year =</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(date,<span class="st">"%Y"</span>))) <span class="sc">|&gt;</span> <span class="co"># get year from date to match population df</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">y =</span> population, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"state"</span><span class="ot">=</span><span class="st">"state_abb"</span>, <span class="st">"date_to_year"</span> <span class="ot">=</span> <span class="st">"year"</span>)) <span class="sc">|&gt;</span> <span class="co"># match population rows to case rows by state abbreviation and year</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="co"># remove rows with null values</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>cases_pop_20_21 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span><span class="dv">100000</span><span class="sc">*</span>cases<span class="sc">/</span>pop, <span class="at">col=</span>state)) <span class="sc">+</span> </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>region_name, <span class="at">scales=</span><span class="st">"free_x"</span>) <span class="sc">+</span> <span class="co"># region strata, give each plot x axis labels</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Date"</span>, <span class="at">y=</span><span class="st">"Cases per 100,000"</span>, <span class="at">title=</span><span class="st">"2020-2021 Cases Across the United States"</span>) <span class="sc">+</span> <span class="co"># labels and title</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>), <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>, <span class="at">angle=</span><span class="dv">30</span>)) <span class="co"># fix spacing and label sizing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="pset-04-wrangling_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -272,7 +277,232 @@ https://api.census.gov/data/2021/pep/population?get=POP_2020,POP_2021,NAME&amp;f
 <li>The dates in the <code>cases</code> dataset are stored as character strings. Use the <strong>lubridate</strong> package to properly parse the <code>date</code> column, then create a summary table showing the total COVID-19 cases by month and year for 2020 and 2021. The table should have columns for year, month (as month name), and total cases across all states. Order by year and month. Use the <strong>knitr</strong> package and <code>kable()</code> function to display the results as a formatted table.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cases |&gt; </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Cases <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(<span class="fu">as.character</span>(date)), <span class="at">year =</span> <span class="fu">year</span>(date), <span class="co"># ymd from lubridate to parse date column, split into year and month columns</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">month =</span> <span class="fu">month</span>(date, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">total_cases =</span> <span class="fu">sum</span>(cases,<span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> <span class="fu">kable</span>() <span class="co"># select only year and month data and combine for total cases</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'year'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">year</th>
+<th style="text-align: left;">month</th>
+<th style="text-align: right;">total_cases</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Jan</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Feb</td>
+<td style="text-align: right;">68</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Mar</td>
+<td style="text-align: right;">50335</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Apr</td>
+<td style="text-align: right;">822648</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">May</td>
+<td style="text-align: right;">616691</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Jun</td>
+<td style="text-align: right;">642552</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Jul</td>
+<td style="text-align: right;">1977016</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Aug</td>
+<td style="text-align: right;">1452393</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Sep</td>
+<td style="text-align: right;">1401917</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Oct</td>
+<td style="text-align: right;">1608932</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Nov</td>
+<td style="text-align: right;">3887222</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2020</td>
+<td style="text-align: left;">Dec</td>
+<td style="text-align: right;">6907540</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Jan</td>
+<td style="text-align: right;">5649115</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Feb</td>
+<td style="text-align: right;">2543964</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Mar</td>
+<td style="text-align: right;">1928749</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Apr</td>
+<td style="text-align: right;">1694189</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">May</td>
+<td style="text-align: right;">948953</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Jun</td>
+<td style="text-align: right;">484817</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Jul</td>
+<td style="text-align: right;">1120939</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Aug</td>
+<td style="text-align: right;">3519407</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Sep</td>
+<td style="text-align: right;">4960807</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Oct</td>
+<td style="text-align: right;">2317854</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Nov</td>
+<td style="text-align: right;">2289118</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">Dec</td>
+<td style="text-align: right;">5293391</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Jan</td>
+<td style="text-align: right;">18871940</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Feb</td>
+<td style="text-align: right;">5524778</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Mar</td>
+<td style="text-align: right;">1202515</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Apr</td>
+<td style="text-align: right;">1030259</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">May</td>
+<td style="text-align: right;">2422493</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Jun</td>
+<td style="text-align: right;">3541044</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Jul</td>
+<td style="text-align: right;">3337779</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Aug</td>
+<td style="text-align: right;">3433327</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Sep</td>
+<td style="text-align: right;">1663011</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Oct</td>
+<td style="text-align: right;">1038235</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Nov</td>
+<td style="text-align: right;">1382581</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2022</td>
+<td style="text-align: left;">Dec</td>
+<td style="text-align: right;">1714778</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2023</td>
+<td style="text-align: left;">Jan</td>
+<td style="text-align: right;">1467538</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2023</td>
+<td style="text-align: left;">Feb</td>
+<td style="text-align: right;">1023913</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2023</td>
+<td style="text-align: left;">Mar</td>
+<td style="text-align: right;">866851</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2023</td>
+<td style="text-align: left;">Apr</td>
+<td style="text-align: right;">436770</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2023</td>
+<td style="text-align: left;">May</td>
+<td style="text-align: right;">156975</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <ol start="14" type="1">
 <li>The following URL provides additional COVID-19 data from the CDC in JSON format:</li>
@@ -282,13 +512,27 @@ https://api.census.gov/data/2021/pep/population?get=POP_2020,POP_2021,NAME&amp;f
 </div>
 <p>Use <strong>httr2</strong> to download COVID-19 death data from this endpoint. Make sure to remove the default limit to get all available data. Create a clean dataset called <code>deaths</code> with columns <code>state</code>, <code>date</code>, and <code>deaths</code> (renamed from the original column name). Ensure dates are in proper Date format and deaths are numeric.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>deathsreq <span class="ot">=</span> deaths_url <span class="sc">|&gt;</span> <span class="fu">request</span>() <span class="sc">|&gt;</span> <span class="fu">req_url_query</span>(<span class="st">`</span><span class="at">$limit</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">10000000000</span>) <span class="sc">|&gt;</span> <span class="fu">req_perform</span>() <span class="co"># increase limit to get full data</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_check_status</span>(deathsreq)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">resp_check_content_type</span>(deathsreq)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>Deaths <span class="ot">&lt;-</span> deathsreq <span class="sc">|&gt;</span> <span class="fu">resp_body_json</span>(<span class="at">simplifyVector =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sex<span class="sc">==</span><span class="st">"All Sexes"</span>, age_group<span class="sc">==</span><span class="st">"All Ages"</span>) <span class="sc">|&gt;</span> <span class="co"># only use aggregate rows, not stratified rows</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(state, <span class="at">date=</span>end_date, <span class="at">deaths=</span>covid_19_deaths) <span class="sc">|&gt;</span> <span class="co"># choose relevant columns to keep</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date), <span class="at">deaths=</span><span class="fu">as.numeric</span>(deaths)) <span class="sc">|&gt;</span> <span class="co"># fix formatting</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(deaths) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(date) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(state)) <span class="sc">|&gt;</span> <span class="co"># remove nulls</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">%in%</span> <span class="fu">c</span>(state.name, <span class="st">"District of Columbia"</span>, <span class="st">"Puerto Rico"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="15" type="1">
 <li>Using the <code>deaths</code> dataset you created, make a bar plot showing the total COVID-19 deaths by state. Show only the top 10 states with the highest death counts. Order the bars from highest to lowest and use appropriate labels and title.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Deaths <span class="sc">|&gt;</span> <span class="fu">group_by</span>(state) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">sumdeaths=</span><span class="fu">sum</span>(deaths)) <span class="sc">|&gt;</span> <span class="co"># total deaths by state</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>sumdeaths) <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">10</span>)) <span class="sc">|&gt;</span> <span class="co"># sort high to low, and get top 10 (not including "United States")</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(state, <span class="sc">-</span>sumdeaths), <span class="at">y=</span>sumdeaths)) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="co"># plot</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"State"</span>, <span class="at">y=</span><span class="st">"COVID-19 Death Count"</span>, <span class="at">title=</span><span class="st">"Top 10 States by COVID-19 Deaths"</span>) <span class="co"># labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="pset-04-wrangling_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 
 </main>

@@ -130,7 +130,8 @@ regions <-  map_df(seq_len(nrow(regions)), ~ { #for 1-n, where n is number of ro
     region_name = regions$region_name[.x], # region name column as the region name of row n
     state_name= regions$states[[.x]] # state name column as each value within the states list
   )
-}) #convert list to data frame. You can use map_df in purrr package 
+}) |> #convert list to data frame. You can use map_df in purrr package 
+  filter(state_name %in% c(state.name, "District of Columbia", "Puerto Rico"))
 ```
 
 9. Add a region and region name columns to the `population` data frame.
@@ -162,7 +163,8 @@ resp_check_status(casereq2)
 resp_check_content_type(casereq2)
 cases_raw2 <- casereq2 |> resp_body_json(simplifyVector = TRUE) # redo with limit
 Cases = cases_raw2 |> select(state,date=end_date,cases=new_cases) |> # choose relevant columns from dataset
-  mutate(cases=as.numeric(cases),date=as.Date(date)) # fix type
+  mutate(cases=as.numeric(cases),date=as.Date(date)) |> # fix type
+  filter(state %in% c(state.abb, "DC", "PR"))
 ```
 
 
@@ -176,7 +178,7 @@ cases_pop_20_21 = Cases |> filter(date>"2019-12-31" & date < "2022-1-1") |> # on
 cases_pop_20_21 |> ggplot(aes(x=date,y=100000*cases/pop, col=state)) + 
   geom_line() + facet_wrap(~region_name, scales="free_x") + # region strata, give each plot x axis labels
   labs(x="Date", y="Cases per 100,000", title="2020-2021 Cases Across the United States") + # labels and title
-  theme(legend.key.size = unit(0.5, "cm"), axis.text.x = element_text(size = 5, angle=45)) # fix spacing and label sizing
+  theme(legend.key.size = unit(0.5, "cm"), axis.text.x = element_text(size = 5, angle=30)) # fix spacing and label sizing
 ```
 
 13. The dates in the `cases` dataset are stored as character strings. Use the **lubridate** package to properly parse the `date` column, then create a summary table showing the total COVID-19 cases by month and year for 2020 and 2021. The table should have columns for year, month (as month name), and total cases across all states. Order by year and month. Use the **knitr** package and `kable()` function to display the results as a formatted table.
@@ -205,14 +207,15 @@ Deaths <- deathsreq |> resp_body_json(simplifyVector = TRUE) |>
   filter(sex=="All Sexes", age_group=="All Ages") |> # only use aggregate rows, not stratified rows
   select(state, date=end_date, deaths=covid_19_deaths) |> # choose relevant columns to keep
   mutate(date = as.Date(date), deaths=as.numeric(deaths)) |> # fix formatting
-  filter(!is.na(deaths) & !is.na(date) & !is.na(state)) # remove nulls
+  filter(!is.na(deaths) & !is.na(date) & !is.na(state)) |> # remove nulls
+  filter(state %in% c(state.name, "District of Columbia", "Puerto Rico"))
 ```
 
 15. Using the `deaths` dataset you created, make a bar plot showing the total COVID-19 deaths by state. Show only the top 10 states with the highest death counts. Order the bars from highest to lowest and use appropriate labels and title.
 
 ```{r}
 Deaths |> group_by(state) |> summarise(sumdeaths=sum(deaths)) |> # total deaths by state
-  arrange(-sumdeaths) |> slice(seq(2,11)) |> # sort high to low, and get top 10 (not including "United States")
+  arrange(-sumdeaths) |> slice(seq(1,10)) |> # sort high to low, and get top 10 (not including "United States")
   ggplot(aes(x=reorder(state, -sumdeaths), y=sumdeaths)) + geom_col() + # plot
   labs(x="State", y="COVID-19 Death Count", title="Top 10 States by COVID-19 Deaths") # labels
 ```
